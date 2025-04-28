@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PPSC Academic Marks Calculator</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; }
+    h1 { color: #333; }
+    .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1);}
+    label { display: block; margin-top: 10px; }
+    input, select, button { width: 100%; padding: 8px; margin-top: 5px; }
+    .result { margin-top: 20px; font-weight: bold; font-size: 1.2em; color: #006400; }
+    .note { margin-top: 15px; font-size: 0.9em; color: #555; }
+    a { color: #0066cc; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>PPSC Academic Marks Calculator</h1>
+
+    <label for="degreeType">Degree Type:</label>
+    <select id="degreeType">
+      <option value="graduation">Single 4-year Graduation Degree</option>
+      <option value="bsc_msc">Separate BSc + MSc Degrees</option>
+    </select>
+
+    <h3>Matric</h3>
+    <label for="matricObt">Obtained Marks:</label>
+    <input type="number" id="matricObt" placeholder="Matric obtained marks">
+    <label for="matricTotal">Total Marks:</label>
+    <input type="number" id="matricTotal" placeholder="Matric total marks">
+
+    <h3>F.Sc</h3>
+    <label for="fscObt">Obtained Marks:</label>
+    <input type="number" id="fscObt" placeholder="F.Sc obtained marks">
+    <label for="fscTotal">Total Marks:</label>
+    <input type="number" id="fscTotal" placeholder="F.Sc total marks">
+
+    <div id="graduationFields">
+      <h3>Graduation</h3>
+      <label for="graduation">Graduation %:</label>
+      <input type="number" id="graduation" placeholder="Graduation percentage">
+    </div>
+
+    <div id="bscMscFields" style="display:none;">
+      <h3>B.Sc</h3>
+      <label for="bscObt">Obtained Marks:</label>
+      <input type="number" id="bscObt" placeholder="B.Sc obtained marks">
+      <label for="bscTotal">Total Marks:</label>
+      <input type="number" id="bscTotal" placeholder="B.Sc total marks">
+
+      <h3>M.Sc</h3>
+      <label for="mscObt">Obtained Marks:</label>
+      <input type="number" id="mscObt" placeholder="M.Sc obtained marks">
+      <label for="mscTotal">Total Marks:</label>
+      <input type="number" id="mscTotal" placeholder="M.Sc total marks">
+    </div>
+
+    <button onclick="calculateMarks()">Calculate Academic Marks</button>
+
+    <div class="result" id="result"></div>
+
+    <div class="note">
+      Note: If you have CGPA instead of percentage for Graduation, please <a href="https://hec-academic-marks-calculator.vercel.app/" target="_blank">convert CGPA to Percentage</a> first.
+    </div>
+    <footer>
+        <div style="text-align:center; font-size: 0.9em; color: #777; margin-top:20px;">
+            Made with ❤️ by <a href="https://chat.openai.com/" target="_blank" style="color: #555;">ChatGPT (OpenAI)</a> for public benefit.
+          </div>
+          
+    </footer>
+  </div>
+
+  <script>
+    const degreeType = document.getElementById('degreeType');
+    const graduationFields = document.getElementById('graduationFields');
+    const bscMscFields = document.getElementById('bscMscFields');
+
+    degreeType.addEventListener('change', function() {
+      if (degreeType.value === 'graduation') {
+        graduationFields.style.display = 'block';
+        bscMscFields.style.display = 'none';
+      } else {
+        graduationFields.style.display = 'none';
+        bscMscFields.style.display = 'block';
+      }
+    });
+
+    function calculateMarks() {
+      const matricObt = parseFloat(document.getElementById('matricObt').value) || 0;
+      const matricTotal = parseFloat(document.getElementById('matricTotal').value) || 1;
+      const fscObt = parseFloat(document.getElementById('fscObt').value) || 0;
+      const fscTotal = parseFloat(document.getElementById('fscTotal').value) || 1;
+
+      const matricPercent = (matricObt / matricTotal) * 100;
+      const fscPercent = (fscObt / fscTotal) * 100;
+
+      let total = 0;
+      total += (matricPercent * 5 / 100);
+      total += (fscPercent * 7 / 100);
+
+      if (degreeType.value === 'graduation') {
+        const graduation = parseFloat(document.getElementById('graduation').value) || 0;
+        total += (graduation * 28 / 100);
+      } else {
+        const bscObt = parseFloat(document.getElementById('bscObt').value) || 0;
+        const bscTotal = parseFloat(document.getElementById('bscTotal').value) || 1;
+        const mscObt = parseFloat(document.getElementById('mscObt').value) || 0;
+        const mscTotal = parseFloat(document.getElementById('mscTotal').value) || 1;
+
+        const bscPercent = (bscObt / bscTotal) * 100;
+        const mscPercent = (mscObt / mscTotal) * 100;
+
+        total += (bscPercent * 11 / 100);
+        total += (mscPercent * 17 / 100);
+      }
+
+      total = total.toFixed(3);
+      document.getElementById('result').innerText = `Your Academic Marks (out of 40): ${total}`;
+    }
+  </script>
+</body>
+</html>
